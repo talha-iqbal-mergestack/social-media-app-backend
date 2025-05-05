@@ -12,13 +12,14 @@ import mongoose from 'mongoose'
 import { PaginationDto } from 'src/common/dto/pagination.dto'
 import { CreateUserDto, UpdateUserDto } from './dto'
 import { UserService } from './user.service'
-import { Roles } from '../decorators'
+import { Public, Roles } from '../decorators'
 import { Role } from '../enums'
 
 @Controller('users')
 export class UserController {
 	constructor(private readonly service: UserService) {}
 
+	@Public()
 	@Post()
 	createUser(@Body() body: CreateUserDto) {
 		return this.service.createUser({ createUserDto: body })
