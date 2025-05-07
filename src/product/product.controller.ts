@@ -15,7 +15,6 @@ import { CreateProductDto, UpdateProductDto } from './dto'
 import { ProductService } from './product.service'
 import { Role } from '../enums'
 import { Public, Roles } from '../decorators'
-import { JwtAuthGuard } from '../auth/jwtAuth.guard'
 
 @Controller('products')
 export class ProductController {

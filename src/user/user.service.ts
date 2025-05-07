@@ -2,12 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { User } from './user.schema'
-import { ErrorHandler } from '../errorHandling/error.handler'
+import { ErrorHandler } from '../error-handling/error.handler'
 
 @Injectable()
 export class UserService {
 	constructor(
-		@InjectModel(User.name) private readonly userModel: Model<User>
+		@InjectModel(User.name)
+		private readonly userModel: Model<User>
 	) {}
 
 	async createUser({ createUserDto }) {
@@ -20,46 +21,48 @@ export class UserService {
 	}
 
 	async getAllUsers({ page, limit }) {
-		const fetchedUsers = await this.userModel
+		const users = await this.userModel
 			.find()
 			.limit(limit)
 			.skip((page - 1) * limit)
 
-		return fetchedUsers
+		return users
 	}
 
 	async updateUser({ id, updateUserDto }) {
-		const conditions = {
-			_id: id,
-		}
-		const update = { $set: updateUserDto }
-		const options = { new: true }
+		const user = await this.userModel.findOne({ _id: id })
+		if (!user) throw new NotFoundException('User not found')
 
-		const updatedUser = await this.userModel.findOneAndUpdate(
-			conditions,
-			update,
-			options
-		)
-		if (!updatedUser) throw new NotFoundException()
-
-		return updatedUser
+		user.set(updateUserDto)
+		return await user.save()
 	}
 
 	async deleteUser({ id }) {
 		const deletedUser = await this.userModel.findByIdAndDelete(id)
 
-		if (!deletedUser) throw new NotFoundException()
+		if (!deletedUser) throw new NotFoundException('User not found')
 
 		return deletedUser
 	}
 
-	async findUser({ email }) {
-		const fetchedUser = await this.userModel
-			.findOne({ email })
-			.select('+password')
+	async findUserByEmail({ email, returnPassword = false }) {
+		let user = null
+		if (returnPassword) {
+			user = await this.userModel.findOne({ email }).select('+password')
+		} else {
+			user = await this.userModel.findOne({ email })
+		}
+		if (!user) throw new NotFoundException('User with this email not found')
 
-		if (!fetchedUser) throw new NotFoundException()
+		return user
+	}
 
-		return fetchedUser
+	async findUserByCode(code: number) {
+		const user = await this.userModel.findOne({
+			$or: [{ signup_otp: code }, { reset_password_otp: code }],
+		})
+		if (!user) throw new NotFoundException('Invalid OTP')
+
+		return user
 	}
 }

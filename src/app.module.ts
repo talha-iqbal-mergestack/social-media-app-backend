@@ -4,13 +4,14 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { MongooseModule } from '@nestjs/mongoose'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { AllExceptionsFilter } from './errorHandling/allException.filter'
+import { AllExceptionsFilter } from './error-handling/all-exception.filter'
 import { ProductModule } from './product/product.module'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
 import { RolesGuard } from './auth/role.guard'
-import { JwtAuthGuard } from './auth/jwtAuth.guard'
-import { PostModule } from './post/post.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard'
+import { PostModule } from './post/post.module'
+import { EmailModule } from './email/email.module'
 
 @Module({
 	imports: [
@@ -29,6 +30,7 @@ import { PostModule } from './post/post.module';
 		UserModule,
 		AuthModule,
 		PostModule,
+		EmailModule,
 	],
 	controllers: [AppController],
 	providers: [

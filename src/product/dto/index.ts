@@ -1,4 +1,2 @@
-import { CreateProductDto } from './createProduct.dto'
-import { UpdateProductDto } from './updateProduct.dto'
-
-export { CreateProductDto, UpdateProductDto }
+export { CreateProductDto } from './create-product.dto'
+export { UpdateProductDto } from './update-product.dto'

@@ -10,8 +10,7 @@ import {
 	Query,
 } from '@nestjs/common'
 import { PostService } from './post.service'
-import { CreatePostDto } from './dto/create-post.dto'
-import { UpdatePostDto } from './dto/update-post.dto'
+import { CreatePostDto, UpdatePostDto } from './dto'
 import { Roles } from 'src/decorators'
 import { Role } from 'src/enums'
 import { PaginationDto } from 'src/common/dto/pagination.dto'
