@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import {
+	IsBoolean,
 	IsEmail,
 	IsNotEmpty,
 	IsNumber,
@@ -8,6 +9,8 @@ import {
 	Length,
 } from 'class-validator'
 import { Role } from '../enums'
+import mongoose from 'mongoose'
+import { Post } from 'src/post/post.schema'
 
 @Schema({
 	timestamps: true,
@@ -85,7 +88,41 @@ export class User {
 
 	@Prop({ default: false })
 	@IsOptional()
+	@IsBoolean()
 	is_email_verified: boolean
+
+	@Prop({
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: User.name,
+			},
+		],
+		default: [],
+	})
+	followers: mongoose.Schema.Types.ObjectId[]
+
+	@Prop({
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: User.name,
+			},
+		],
+		default: [],
+	})
+	following: mongoose.Schema.Types.ObjectId[]
+
+	@Prop({
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: Post.name,
+			},
+		],
+		default: [],
+	})
+	liked_posts: mongoose.Schema.Types.ObjectId[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

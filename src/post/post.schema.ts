@@ -1,7 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { IsNotEmpty, IsString, Length } from 'class-validator'
+import {
+	IsArray,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+	Length,
+} from 'class-validator'
 import mongoose from 'mongoose'
-import { User } from 'src/user/user.schema'
 
 @Schema({
 	timestamps: true,
@@ -31,11 +36,25 @@ export class Post {
 
 	@Prop({
 		type: mongoose.Schema.Types.ObjectId,
-		ref: User.name,
+		ref: 'User',
+		required: true,
 	})
 	@IsString()
 	@IsNotEmpty()
 	_poster: string
+
+	@Prop({
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'User',
+			},
+		],
+		default: [],
+	})
+	@IsOptional()
+	@IsArray()
+	likes: mongoose.Schema.Types.ObjectId[]
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post)

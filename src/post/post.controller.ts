@@ -57,4 +57,32 @@ export class PostController {
 	deletePost(@Param('id') id: mongoose.Schema.Types.ObjectId) {
 		return this.postService.deletePost({ id })
 	}
+
+	@Post(':id/like')
+	likePost(
+		@Param('id') id: mongoose.Schema.Types.ObjectId,
+		@Request() req: any
+	) {
+		return this.postService.likePost({ postId: id, userId: req.user.id })
+	}
+
+	@Get('feed/following')
+	getFollowingPosts(@Request() req: any, @Query() query: PaginationDto) {
+		const { page, limit } = query
+		return this.postService.getFollowingPosts({
+			userId: req.user.id,
+			page,
+			limit,
+		})
+	}
+
+	@Get('feed/following-likes')
+	getFollowingLikedPosts(@Request() req: any, @Query() query: PaginationDto) {
+		const { page, limit } = query
+		return this.postService.getFollowingLikedPosts({
+			userId: req.user.id,
+			page,
+			limit,
+		})
+	}
 }

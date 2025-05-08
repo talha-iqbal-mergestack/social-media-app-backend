@@ -7,6 +7,7 @@ import {
 	Delete,
 	Query,
 	Param,
+	Request,
 } from '@nestjs/common'
 import mongoose from 'mongoose'
 import { PaginationDto } from 'src/common/dto/pagination.dto'
@@ -43,5 +44,34 @@ export class UserController {
 	@Delete(':id')
 	deleteUser(@Param('id') id: mongoose.Schema.Types.ObjectId) {
 		return this.service.deleteUser({ id })
+	}
+
+	@Post(':id/follow')
+	followUser(
+		@Param('id') followingId: mongoose.Schema.Types.ObjectId,
+		@Request() req: any
+	) {
+		return this.service.followUser({
+			followerId: req.user.id,
+			followingId,
+		})
+	}
+
+	@Delete(':id/follow')
+	unfollowUser(
+		@Param('id') followingId: mongoose.Schema.Types.ObjectId,
+		@Request() req: any
+	) {
+		return this.service.unfollowUser({
+			followerId: req.user.id,
+			followingId,
+		})
+	}
+
+	@Get(':id/followers-and-following')
+	getFollowersAndFollowing(
+		@Param('id') userId: mongoose.Schema.Types.ObjectId
+	) {
+		return this.service.getFollowersAndFollowing({ userId })
 	}
 }
