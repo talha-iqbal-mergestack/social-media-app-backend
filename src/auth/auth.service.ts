@@ -32,7 +32,12 @@ export class AuthService {
 	}
 
 	login(user) {
-		const payload = { email: user.email, sub: user.id, roles: user.roles }
+		const payload = {
+			email: user.email,
+			sub: user.id,
+			roles: user.roles,
+			is_email_verified: user.is_email_verified,
+		}
 		return {
 			access_token: this.jwtService.sign(payload),
 		}
