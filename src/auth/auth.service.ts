@@ -34,6 +34,7 @@ export class AuthService {
 	login(user) {
 		const payload = {
 			email: user.email,
+			name: user.name,
 			sub: user.id,
 			roles: user.roles,
 			is_email_verified: user.is_email_verified,
