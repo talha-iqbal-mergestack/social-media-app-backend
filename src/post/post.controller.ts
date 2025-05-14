@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { PostService } from './post.service'
 import { CreatePostDto, UpdatePostDto } from './dto'
-import { Roles } from 'src/decorators'
+import { Public, Roles } from 'src/decorators'
 import { Role } from 'src/enums'
 import { PaginationDto } from 'src/common/dto/pagination.dto'
 import mongoose from 'mongoose'
@@ -33,6 +33,46 @@ export class PostController {
 	getAllPosts(@Query() query: PaginationDto) {
 		const { page, limit } = query
 		return this.postService.getAllPosts({ page, limit })
+	}
+
+	@Get('my-posts')
+	getPostsByUserId(@Query() query: PaginationDto, @Request() req: any) {
+		const { page, limit } = query
+		return this.postService.getPostsByUserId({
+			userId: req.user.id,
+			page,
+			limit,
+		})
+	}
+
+	@Get('feed')
+	getPostsFeed(@Request() req: any, @Query() query: PaginationDto) {
+		const { page, limit } = query
+		return this.postService.getPostsFeed({
+			userId: req.user.id,
+			page,
+			limit,
+		})
+	}
+
+	@Get('feed/following')
+	getFollowingPosts(@Request() req: any, @Query() query: PaginationDto) {
+		const { page, limit } = query
+		return this.postService.getFollowingPosts({
+			userId: req.user.id,
+			page,
+			limit,
+		})
+	}
+
+	@Get('feed/following-likes')
+	getFollowingLikedPosts(@Request() req: any, @Query() query: PaginationDto) {
+		const { page, limit } = query
+		return this.postService.getFollowingLikedPosts({
+			userId: req.user.id,
+			page,
+			limit,
+		})
 	}
 
 	@Get(':id')
@@ -64,25 +104,5 @@ export class PostController {
 		@Request() req: any
 	) {
 		return this.postService.likePost({ postId: id, userId: req.user.id })
-	}
-
-	@Get('feed/following')
-	getFollowingPosts(@Request() req: any, @Query() query: PaginationDto) {
-		const { page, limit } = query
-		return this.postService.getFollowingPosts({
-			userId: req.user.id,
-			page,
-			limit,
-		})
-	}
-
-	@Get('feed/following-likes')
-	getFollowingLikedPosts(@Request() req: any, @Query() query: PaginationDto) {
-		const { page, limit } = query
-		return this.postService.getFollowingLikedPosts({
-			userId: req.user.id,
-			page,
-			limit,
-		})
 	}
 }

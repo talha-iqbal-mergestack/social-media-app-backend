@@ -180,6 +180,21 @@ export class UserService {
 		}
 	}
 
+	async getUnfollowedUsers({ userId, page = 1, limit = 10 }) {
+		const currentUser = await this.findUserById(userId)
+
+		return await this.userModel
+			.find({
+				_id: {
+					$nin: [currentUser._id, ...currentUser.following],
+				},
+			})
+			.select('_id name email')
+			.sort({ createdAt: -1 })
+			.skip((page - 1) * limit)
+			.limit(limit)
+	}
+
 	async getFollowersAndFollowing({ userId }) {
 		const user = await this.userModel
 			.findById(userId)

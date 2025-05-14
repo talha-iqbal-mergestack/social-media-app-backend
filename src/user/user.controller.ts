@@ -68,10 +68,22 @@ export class UserController {
 		})
 	}
 
-	@Get(':id/followers-and-following')
-	getFollowersAndFollowing(
-		@Param('id') userId: mongoose.Schema.Types.ObjectId
+	@Get(':id/follow-suggestions')
+	@Get('follow-suggestions')
+	async getUnfollowedUsers(
+		@Request() req: any,
+		@Query() query: PaginationDto
 	) {
-		return this.service.getFollowersAndFollowing({ userId })
+		const { page, limit } = query
+		return this.service.getUnfollowedUsers({
+			userId: req.user.id,
+			page,
+			limit,
+		})
+	}
+
+	@Get(':id/followers-and-following')
+	async getFollowersAndFollowing(@Param('id') id: string) {
+		return this.service.getFollowersAndFollowing({ userId: id })
 	}
 }

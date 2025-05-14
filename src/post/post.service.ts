@@ -28,6 +28,17 @@ export class PostService {
 		return foundPosts
 	}
 
+	async getPostsByUserId({ userId, page = 1, limit = 10 }) {
+		const foundPosts = await this.postModel
+			.find({ _poster: userId })
+			.sort({ createdAt: -1 })
+			.limit(limit)
+			.skip((page - 1) * limit)
+			.populate('_poster', 'name email')
+			.populate('likes', 'name email')
+		return foundPosts
+	}
+
 	async getPostById({ id }) {
 		const foundPost = await this.postModel.findById(id)
 		if (!foundPost) throw new NotFoundException('Post not found')
@@ -123,6 +134,27 @@ export class PostService {
 		return await this.postModel
 			.find({
 				likes: { $in: user.following },
+			})
+			.sort({ createdAt: -1 })
+			.skip((page - 1) * limit)
+			.limit(limit)
+			.populate('_poster', 'name email')
+			.populate('likes', 'name email')
+	}
+
+	async getPostsFeed({ userId, page = 1, limit = 10 }) {
+		const user = await this.userService.findUserById(userId)
+		if (!user) {
+			throw new NotFoundException('User not found')
+		}
+
+		return await this.postModel
+			.find({
+				$or: [
+					{ _poster: { $in: user.following } },
+					{ likes: { $in: user.following } },
+					{ _poster: userId },
+				],
 			})
 			.sort({ createdAt: -1 })
 			.skip((page - 1) * limit)
