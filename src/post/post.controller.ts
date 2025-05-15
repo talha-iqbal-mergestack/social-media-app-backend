@@ -9,9 +9,10 @@ import {
 	Request,
 	Query,
 } from '@nestjs/common'
+
 import { PostService } from './post.service'
 import { CreatePostDto, UpdatePostDto } from './dto'
-import { Public, Roles } from 'src/decorators'
+import { Roles } from 'src/decorators'
 import { Role } from 'src/enums'
 import { PaginationDto } from 'src/common/dto/pagination.dto'
 import mongoose from 'mongoose'
@@ -104,5 +105,13 @@ export class PostController {
 		@Request() req: any
 	) {
 		return this.postService.likePost({ postId: id, userId: req.user.id })
+	}
+
+	@Delete(':id/like')
+	unlikePost(
+		@Param('id') id: mongoose.Schema.Types.ObjectId,
+		@Request() req: any
+	) {
+		return this.postService.unlikePost({ postId: id, userId: req.user.id })
 	}
 }

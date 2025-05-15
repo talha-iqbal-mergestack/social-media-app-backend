@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+
 import { Post } from './post.schema'
-import { ClientSession, Model } from 'mongoose'
 import { UserService } from 'src/user/user.service'
 
 @Injectable()
@@ -102,6 +103,42 @@ export class PostService {
 			return { success: true }
 		} catch (err) {
 			// await session.abortTransaction()
+			throw err
+		} finally {
+			// session.endSession()
+		}
+	}
+
+	async unlikePost({ postId, userId }) {
+		// const session = await this.postModel.db.startSession()
+		try {
+			// session.startTransaction()
+			const post = await this.getPostById({ id: postId })
+
+			const [_, updatedPost] = await Promise.all([
+				this.userService.removeLikedPostFromUser({
+					postId: post.id,
+					userId,
+					// session,
+				}),
+				this.postModel.findByIdAndUpdate(
+					{ _id: postId },
+					{ $pull: { likes: userId } },
+					{
+						new: true,
+						// session
+					}
+				),
+			])
+			if (!updatedPost) {
+				throw new NotFoundException('Post could not be updated')
+			}
+
+			// await session.commitTransaction()
+			return { success: true }
+		} catch (err) {
+			// await session.abortTransaction()
+			console.log(err)
 			throw err
 		} finally {
 			// session.endSession()

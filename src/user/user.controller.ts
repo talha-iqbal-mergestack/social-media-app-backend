@@ -10,11 +10,12 @@ import {
 	Request,
 } from '@nestjs/common'
 import mongoose from 'mongoose'
+
 import { PaginationDto } from 'src/common/dto/pagination.dto'
 import { CreateUserDto, UpdateUserDto } from './dto'
 import { UserService } from './user.service'
-import { Public, Roles } from '../decorators'
-import { Role } from '../enums'
+import { Public, Roles } from 'src/decorators'
+import { Role } from 'src/enums'
 
 @Controller('users')
 export class UserController {

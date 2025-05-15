@@ -1,11 +1,8 @@
-import {
-	BadRequestException,
-	Injectable,
-	NotFoundException,
-} from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { UserService } from '../user/user.service'
+
+import { UserService } from 'src/user/user.service'
 import { EmailService } from 'src/email/email.service'
 
 @Injectable()

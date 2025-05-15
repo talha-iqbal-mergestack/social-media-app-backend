@@ -1,4 +1,3 @@
-// Suggested file: src/error-handling/custom-exceptions.ts
 import { HttpException, HttpStatus } from '@nestjs/common'
 
 export class SmtpConnectionException extends HttpException {

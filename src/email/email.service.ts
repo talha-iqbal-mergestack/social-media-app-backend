@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { MailerService } from '@nestjs-modules/mailer'
 import { ConfigService } from '@nestjs/config'
+
 import { ErrorHandler } from 'src/error-handling/error.handler'
 
 @Injectable()

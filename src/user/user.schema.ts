@@ -8,8 +8,9 @@ import {
 	IsString,
 	Length,
 } from 'class-validator'
-import { Role } from '../enums'
 import mongoose from 'mongoose'
+
+import { Role } from 'src/enums'
 import { Post } from 'src/post/post.schema'
 
 @Schema({

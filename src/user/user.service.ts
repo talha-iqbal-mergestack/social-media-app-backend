@@ -1,14 +1,13 @@
 import {
 	BadRequestException,
-	forwardRef,
-	Inject,
 	Injectable,
 	NotFoundException,
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, QueryOptions } from 'mongoose'
+
 import { User } from './user.schema'
-import { ErrorHandler } from '../error-handling/error.handler'
+import { ErrorHandler } from 'src/error-handling/error.handler'
 
 @Injectable()
 export class UserService {
@@ -101,6 +100,33 @@ export class UserService {
 		if (!updatedUser) {
 			throw new NotFoundException(
 				`User with ID ${userId} not found for liking post.`
+			)
+		}
+
+		return updatedUser
+	}
+
+	async removeLikedPostFromUser({
+		postId,
+		userId,
+		// session
+	}) {
+		const conditions = { _id: userId }
+		const update = {
+			$pull: { liked_posts: postId },
+		}
+		const options: QueryOptions = {
+			new: true,
+			// session
+		}
+		const updatedUser = await this.userModel.findByIdAndUpdate(
+			conditions,
+			update,
+			options
+		)
+		if (!updatedUser) {
+			throw new NotFoundException(
+				`User with ID ${userId} not found for unliking post.`
 			)
 		}
 
