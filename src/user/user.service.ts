@@ -17,6 +17,12 @@ export class UserService {
 	) {}
 
 	async createUser({ createUserDto }) {
+		const existingUser = await this.userModel.findOne({
+			email: createUserDto.email,
+		})
+		if (existingUser) {
+			throw new BadRequestException('User with this email already exists')
+		}
 		try {
 			const createdUser = new this.userModel(createUserDto)
 			return await createdUser.save()
