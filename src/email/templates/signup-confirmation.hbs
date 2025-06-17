@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<title>Account Confirmation</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+			}
+			h1 {
+				color: #333;
+			}
+			p {
+				margin-bottom: 10px;
+			}
+			.otp {
+				font-size: 24px;
+				font-weight: bold;
+				padding: 10px;
+				background-color: #f9f9f9;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+			}
+			.footer {
+				margin-top: 30px;
+				color: #777;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Account Confirmation</h1>
+
+		<p>Hello ,</p>
+
+		<p>Thank you for signing up! We're thrilled to have you as a new member.
+			To activate your account, please use the following One-Time Password
+			(OTP):</p>
+
+		<p class='otp'>{{code}}</p>
+
+		<p>Please enter the OTP in the provided field on our website to complete
+			your account confirmation.</p>
+
+		<p>If you have any questions or need assistance, please feel free to
+			contact us. Welcome aboard!</p>
+
+		<div class='footer'>
+			<p>Best regards,</p>
+			<p>{{appName}} Team</p>
+		</div>
+	</body>
+</html>

@@ -10,5 +10,5 @@ export class PaginationDto {
 	@ApiProperty()
 	@IsOptional()
 	@IsNumber()
-	limit?: number = 2
+	limit?: number = 10
 }

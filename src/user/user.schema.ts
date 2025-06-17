@@ -1,6 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator'
-import { Role } from '../enums'
+import {
+	IsBoolean,
+	IsEmail,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString,
+	Length,
+} from 'class-validator'
+import mongoose from 'mongoose'
+
+import { Role } from 'src/enums'
+import { Post } from 'src/post/post.schema'
 
 @Schema({
 	timestamps: true,
@@ -10,6 +21,10 @@ import { Role } from '../enums'
 			delete ret._id
 			delete ret.__v
 			delete ret.password
+			delete ret.signup_otp
+			delete ret.signup_otp_expiry
+			delete ret.reset_password_otp
+			delete ret.reset_password_otp_expiry
 			return ret
 		},
 	},
@@ -19,6 +34,10 @@ import { Role } from '../enums'
 			delete ret._id
 			delete ret.__v
 			delete ret.password
+			delete ret.signup_otp
+			delete ret.signup_otp_expiry
+			delete ret.reset_password_otp
+			delete ret.reset_password_otp_expiry
 			return ret
 		},
 	},
@@ -47,6 +66,64 @@ export class User {
 	})
 	@IsNotEmpty()
 	roles: Role[]
+
+	@Prop()
+	@IsOptional()
+	@IsNumber()
+	reset_password_otp: number
+
+	@Prop()
+	@IsOptional()
+	@IsString()
+	reset_password_otp_expiry: Date
+
+	@Prop()
+	@IsOptional()
+	@IsNumber()
+	signup_otp: number
+
+	@Prop()
+	@IsOptional()
+	@IsNumber()
+	signup_otp_expiry: number
+
+	@Prop({ default: false })
+	@IsOptional()
+	@IsBoolean()
+	is_email_verified: boolean
+
+	@Prop({
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: User.name,
+			},
+		],
+		default: [],
+	})
+	followers: mongoose.Schema.Types.ObjectId[]
+
+	@Prop({
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: User.name,
+			},
+		],
+		default: [],
+	})
+	following: mongoose.Schema.Types.ObjectId[]
+
+	@Prop({
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: Post.name,
+			},
+		],
+		default: [],
+	})
+	liked_posts: mongoose.Schema.Types.ObjectId[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)
